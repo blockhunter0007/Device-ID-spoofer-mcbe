@@ -10,7 +10,7 @@ patterns = [
 
 ]
 
-VERSION = "1.0.3"
+VERSION = "1.0.4"
 
 class GUI(ctk.CTk):
     def __init__(self):
