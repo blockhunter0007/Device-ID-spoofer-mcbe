@@ -32,4 +32,4 @@ python main.py
 
 Use **Randomize**, **Apply**, or **Reset** from the GUI.
 
-> Use this only on software you are authorized to modify.
+> This Software is for educational purposes only.
