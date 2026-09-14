@@ -31,24 +31,24 @@ jobs:
 
       - name: Build EXE
         run: |
-          pyinstaller --noconsole --onefile --name "Divice ID spoofer-onefile" "divice_id_spoofer.py"
+          pyinstaller --noconsole --onefile --name "Device ID spoofer-onefile" "device_id_spoofer.py"
 
       - name: Build Standalone EXE
         run: |
-          pyinstaller --noconsole --onedir --name "Divice ID spoofer-standalone" "divice_id_spoofer.py"
+          pyinstaller --noconsole --onedir --name "Device ID spoofer-standalone" "device_id_spoofer.py"
       
       - name: Zip Standalone Build
         run: |
           Compress-Archive `
-            -Path "dist/Divice ID spoofer-standalone/*" `
-            -DestinationPath "dist/Divice ID spoofer-standalone.zip"
+            -Path "dist/Device ID spoofer-standalone/*" `
+            -DestinationPath "dist/Device ID spoofer-standalone.zip"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          name: "Divice ID Spoofer ${{ github.ref_name }}"
+          name: "Device ID Spoofer ${{ github.ref_name }}"
           body_path: "release-notes/${{ github.ref_name }}.md"
           files: |
-            dist/Divice ID spoofer-onefile.exe
-            dist/Divice ID spoofer-standalone.zip
+            dist/Device ID spoofer-onefile.exe
+            dist/Device ID spoofer-standalone.zip

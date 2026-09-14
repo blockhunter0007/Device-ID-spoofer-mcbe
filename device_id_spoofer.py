@@ -10,7 +10,7 @@ patterns = [
 
 ]
 
-VERSION = "1.0.6"
+VERSION = "1.0.7"
 
 class GUI(ctk.CTk):
     def __init__(self):
@@ -22,7 +22,7 @@ class GUI(ctk.CTk):
         self.inject()
         self.build_gui()
     def build_gui(self):
-        self.title("Divice ID Spoofer")
+        self.title("Device ID Spoofer")
         self.geometry("430x200")
 
         self.label = ctk.CTkLabel(self, text="Device ID Spoofer by Blockhunter", font=("Arial", 16))
