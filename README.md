@@ -27,7 +27,7 @@ pip install customtkinter pymem
 Start Minecraft, then run:
 
 ```bash
-python main.py
+python device_id_spoofer.py
 ```
 
 Use **Randomize**, **Apply**, or **Reset** from the GUI.
