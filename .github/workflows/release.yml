@@ -50,5 +50,5 @@ jobs:
           name: "Divice ID Spoofer ${{ github.ref_name }}"
           body_path: "release-notes/${{ github.ref_name }}.md"
           files: |
-            "dist/Divice ID spoofer-onefile.exe"
-            "dist/Divice ID spoofer-standalone.zip"
+            dist/Divice ID spoofer-onefile.exe
+            dist/Divice ID spoofer-standalone.zip
