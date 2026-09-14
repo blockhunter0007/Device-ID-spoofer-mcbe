@@ -35,7 +35,7 @@ jobs:
 
       - name: Build Standalone EXE
         run: |
-          pyinstaller --noconsole --standalone --name "Divice ID spoofer-standalone" "divice_id_spoofer.py"
+          pyinstaller --noconsole --onedir --name "Divice ID spoofer-standalone" "divice_id_spoofer.py"
       
       - name: Zip Standalone Build
         run: |
