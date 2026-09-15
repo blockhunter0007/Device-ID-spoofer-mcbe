@@ -10,12 +10,14 @@ patterns = [
 
 ]
 
-VERSION = "1.0.7"
+VERSION = "1.0.8"
 
 class GUI(ctk.CTk):
-    def __init__(self):
+    def __init__(self, debug: bool = False):
         super().__init__()
+        self.debug = debug
         self.did = ""
+        self.did_length = 0
         self.current_did = ""
         self.found = False
         self.pm = None
@@ -63,12 +65,19 @@ class GUI(ctk.CTk):
                     break
             else:
                 raise Exception("Pattern not found")
-            self.did = self.pm.read_bytes(result, 32).decode("ascii")
-            print(f"[BLS] Found DID: {self.did}")
+            temp = self.pm.read_bytes(result, 80).decode("ascii")
+            self.did = temp.split('"')[0]
+            self.did_length = len(self.did)
+            if self.debug:
+                print(f"[BLS] Found pattern at: {hex(result)}")
+                print(f"[BLS] Found string: {temp}")
+                print(f"[BLS] Found DID: {self.did}")
+                print(f"[BLS] DID Length: {self.did_length}")
             self.current_did = self.did
             self.found = True
         except Exception as e:
-            print(f"[BLS] Error occurred while injecting: {e}")
+            if self.debug:
+                print(f"[BLS] Error occurred while injecting: {e}")
             self.found = False
     def randomize_did(self):
         threading.Thread(target=self._randomize_did).start()
@@ -79,10 +88,10 @@ class GUI(ctk.CTk):
         if self.found:
             new_did = self.did_entry.get()
             if False:
-                if not new_did or len(new_did) != 32:
-                    new_did = new_did + ''.join(random.choices('0123456789abcdef', k=(32 - len(new_did))))
+                if not new_did or len(new_did) != self.did_length:
+                    new_did = new_did + ''.join(random.choices('0123456789abcdef', k=(self.did_length - len(new_did))))
             else:
-                new_did = ''.join(random.choices('0123456789abcdef', k=32))
+                new_did = ''.join(random.choices('0123456789abcdef', k=self.did_length))
             self._ui_call(self.did_entry.configure, state="normal")
             self._ui_call(self.did_entry.delete, 0, 'end')
             self._ui_call(self.did_entry.insert, 0, new_did)
@@ -106,8 +115,8 @@ class GUI(ctk.CTk):
         self._disable_controls()
         if self.found:
             new_did = self.did_entry.get()
-            if not new_did or len(new_did) != 32:
-                new_did = new_did + ''.join(random.choices('0123456789abcdef', k=(32 - len(new_did))))
+            if not new_did or len(new_did) != self.did_length:
+                new_did = new_did + ''.join(random.choices('0123456789abcdef', k=(self.did_length - len(new_did))))
             self._write_did(new_did)
             self.current_did = new_did
         self._enable_controls()
@@ -124,19 +133,22 @@ class GUI(ctk.CTk):
         self._ui_call(self.did_reset_button.configure, state="normal")
     def _write_did(self, new_did):
         if self.found:
-            if len(new_did) > 32:
-                new_did = new_did[:32]
+            if len(new_did) > self.did_length:
+                new_did = new_did[:self.did_length]
+            if self.debug:
+                print(f"[BLS] Writing DID: {new_did}")
             resuts = pymem.pattern.pattern_scan_all(self.pm.process_handle, bytes(self.current_did, 'ascii'), return_multiple=True)
             for result in resuts:
                 try:
                     self.pm.write_bytes(result, bytes(new_did, 'ascii'), len(new_did))
                 except Exception as e:
-                    print(f"[BLS] Error occurred while resetting DID: {e}")
+                    if self.debug:
+                        print(f"[BLS] Error occurred while resetting DID: {e}")
             self.current_did = new_did
     def _on_close(self):
         self.destroy()
         self._write_did(self.did)
 
 if __name__ == "__main__":
-    app = GUI()
+    app = GUI(debug=True)
     app.mainloop()
